@@ -24,16 +24,19 @@ public class Essential{
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event){
 		log.info("PreInit started");
+		proxy.preInit(event);
 	}
 	
 	@EventHandler
     public void init(FMLInitializationEvent event){
 		// some example code
 		log.info("Init started");
+		proxy.init(event);
     }
 
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent event){
 		log.info("PostInit started");
+		proxy.postInit(event);
 	}
 }
