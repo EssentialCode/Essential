@@ -13,6 +13,7 @@ import net.minecraft.util.IStringSerializable;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.oredict.OreDictionary;
 import zenith.essential.common.EssentialLogger;
 
 public class ItemEssentialCrafting extends ItemBase {
@@ -47,6 +48,7 @@ public class ItemEssentialCrafting extends ItemBase {
 		super(name);
 		setHasSubtypes(true);
 		setMaxDamage(0);
+		OreDictionary.registerOre("string", new ItemStack(this, 1, 0));
 	}
 	
 	public static ItemBase instantiate(){
