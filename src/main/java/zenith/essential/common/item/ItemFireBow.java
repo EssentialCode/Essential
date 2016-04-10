@@ -1,10 +1,15 @@
 package zenith.essential.common.item;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
@@ -12,6 +17,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.oredict.ShapelessOreRecipe;
 import zenith.essential.common.EssentialLogger;
 import zenith.essential.common.lib.ColorHelper;
 
@@ -24,11 +30,13 @@ public class ItemFireBow extends ItemBase {
 	public static final short MAX_COOLING = 15;
 	public static final String HEAT_KEY = "heat";
 	public static final String COOLING_KEY = "cooling";
+	public static ItemFireBow instance;
 
 	public ItemFireBow(){
 		super(name);
 		this.maxStackSize = 1;
         this.setMaxDamage(64);
+        instance = this;
 	}
 	
 	@SideOnly(Side.CLIENT)
@@ -181,5 +189,15 @@ public class ItemFireBow extends ItemBase {
     		return true;
     	}
     	return false;
+    }
+    
+    public List<IRecipe> getRecipes(){
+    	List<IRecipe> recipes = new ArrayList<IRecipe>();
+    	recipes.add(new ShapelessOreRecipe(
+    			new ItemStack(instance),
+    			new ItemStack(Items.bow),
+    			"stickWood"
+			));
+    	return recipes;
     }
 }

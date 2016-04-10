@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.item.Item;
+import net.minecraft.item.crafting.IRecipe;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -36,6 +37,15 @@ public final class EssentialItems {
 	public static void initModels(){
 		for(ItemBase item : itemList){
 			item.initModel();
+		}
+	}
+	
+	public static void registerRecipes(List<IRecipe> recipes){
+		for(ItemBase item : itemList){
+			List<IRecipe> newRecipes = item.getRecipes();
+			if(newRecipes != null && newRecipes.size() > 0){
+				recipes.addAll(newRecipes);
+			}
 		}
 	}
 }

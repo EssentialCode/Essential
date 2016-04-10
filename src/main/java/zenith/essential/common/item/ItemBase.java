@@ -1,7 +1,10 @@
 package zenith.essential.common.item;
 
+import java.util.List;
+
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.item.Item;
+import net.minecraft.item.crafting.IRecipe;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
@@ -38,4 +41,7 @@ public class ItemBase extends Item {
 		return super.getUnlocalizedName() + "." + GeneralConstants.MOD_ID;
 	}
 
+	public List<IRecipe> getRecipes(){
+		return null;
+	}
 }
