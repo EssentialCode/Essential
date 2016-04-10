@@ -1,0 +1,18 @@
+{
+  "forge_marker": 1,
+  "variants": {
+	"normal": [{
+	  "craftingItemType": {
+	    "fiberGrass": { "model": "essential:fiberGrass" }
+	  }
+	}],
+	"inventory": [{
+	  "craftingItemType": {
+	    "fiberGrass": { "model": "essential:fiberGrass" }
+	  }
+	}],
+    "craftingItemType": {
+      "fiberGrass": { "model": "essential:fiberGrass" }
+    }
+  }
+}

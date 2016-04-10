@@ -7,6 +7,7 @@ import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import zenith.essential.common.crafting.RecipeHandler;
 import zenith.essential.common.lib.GeneralConstants;
 import zenith.essential.common.proxy.CommonProxy;
 
@@ -32,6 +33,7 @@ public class Essential{
 		// some example code
 		log.info("Init started");
 		proxy.init(event);
+		RecipeHandler.postInit();
     }
 
 	@EventHandler
