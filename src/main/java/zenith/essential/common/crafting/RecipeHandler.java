@@ -32,15 +32,8 @@ public class RecipeHandler {
 
 	}
 
-	public static void updateToOreDictRecipes(Object targetIn, String oreName) throws IllegalArgumentException {
-		boolean isItem;
-		if (targetIn instanceof Item) {
-			isItem = true;
-		} else if (targetIn instanceof Block) {
-			isItem = false;
-		} else {
-			throw new IllegalArgumentException("Error: Thats not valid argument.");
-		}
+	private static void updateToOreDictRecipes(Object targetIn, String oreName) {
+		boolean isItem = targetIn instanceof Item;
 		ItemStack target = isItem ? new ItemStack((Item) targetIn) : new ItemStack((Block) targetIn);
 		int[] oreIds = OreDictionary.getOreIDs(target);
 		if(oreIds != null && oreIds.length > 0){
@@ -104,6 +97,14 @@ public class RecipeHandler {
 		}
 		log.info("Found " + matches.size() + " recipes containing " + target.getDisplayName());
 		replaceRecipes(matches);
+	}
+	
+	public static void updateToOreDictRecipes(Item targetIn, String oreName) {
+		updateToOreDictRecipes(targetIn, oreName);
+	}
+	
+	public static void updateToOreDictRecipes(Block targetIn, String oreName) {
+		updateToOreDictRecipes(targetIn, oreName);
 	}
 	
 	private static void replaceRecipes(List<IRecipe> recipes){
