@@ -17,12 +17,11 @@ public class ForgeEventHandlers {
 
 	// Keeping this code around to be reused for other random drops
 	@SubscribeEvent
-	public void dropSacredLeaf(BlockEvent.BreakEvent e){
+	public void dropSacredLeaf(BlockEvent.HarvestDropsEvent e){
 		if(!e.world.isRemote && 
-		   !e.getPlayer().capabilities.isCreativeMode &&
 		   e.state.getBlock() == Blocks.leaves
 		   ){
-			int chance = (int) Math.floor(Math.random() * 100);
+			int chance = (int) Math.floor(Math.random() * 150);
 			if(chance == 0){
 				float xOff = RANDOM.nextFloat() * 0.8F + 0.1F;
 				float yOff = RANDOM.nextFloat() * 0.8F + 0.1F;
