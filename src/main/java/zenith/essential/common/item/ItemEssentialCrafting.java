@@ -27,9 +27,11 @@ public class ItemEssentialCrafting extends ItemBase {
 	private static ItemEssentialCrafting instance;
 
 	public static int GRASS_FIBER = 0;
+	public static int SACRED_LEAF = 1;
 
 	public static enum CraftingItemType implements IStringSerializable {
-        GRASS_FIBER("fiberGrass");
+        GRASS_FIBER("fiberGrass"),
+		SACRED_LEAF("sacredLeaf");
 
         private final String name;
 
@@ -46,7 +48,8 @@ public class ItemEssentialCrafting extends ItemBase {
 	public static final PropertyEnum<CraftingItemType> CRAFTING_ITEM_TYPE = PropertyEnum.create("craftingItemType", CraftingItemType.class);
 
 	public static final String[] TYPES = {
-			"fiberGrass"
+			"fiberGrass",
+			"sacredLeaf"
 	};
 
 	public ItemEssentialCrafting(){
@@ -66,6 +69,7 @@ public class ItemEssentialCrafting extends ItemBase {
     public void initModel() {
 		log.info("Registry name: " + getRegistryName());
         ModelLoader.setCustomModelResourceLocation(this, 0, new ModelResourceLocation(getRegistryName()+"FiberGrass"));
+        ModelLoader.setCustomModelResourceLocation(this, 1, new ModelResourceLocation(getRegistryName()+"SacredLeaf"));
     }
 
     /**

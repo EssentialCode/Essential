@@ -1,7 +1,7 @@
 {
 	"parent": "builtin/generated",
 	"textures": {
-		"layer0": "essential:items/fiberGrass"
+		"layer0": "essential:items/sacredLeaf"
 	},
 	"display": {
         "thirdperson": {
