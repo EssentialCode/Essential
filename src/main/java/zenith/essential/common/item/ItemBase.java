@@ -1,5 +1,6 @@
 package zenith.essential.common.item;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.client.resources.model.ModelResourceLocation;
@@ -37,6 +38,6 @@ public class ItemBase extends Item {
 	}
 
 	public List<IRecipe> getRecipes(){
-		return null;
+		return new ArrayList<IRecipe>();
 	}
 }

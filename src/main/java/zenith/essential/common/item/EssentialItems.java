@@ -43,9 +43,7 @@ public final class EssentialItems {
 	public static void registerRecipes(List<IRecipe> recipes){
 		for(ItemBase item : itemList){
 			List<IRecipe> newRecipes = item.getRecipes();
-			if(newRecipes != null && newRecipes.size() > 0){
-				recipes.addAll(newRecipes);
-			}
+			recipes.addAll(newRecipes);
 		}
 	}
 }

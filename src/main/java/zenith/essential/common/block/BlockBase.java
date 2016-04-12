@@ -1,5 +1,6 @@
 package zenith.essential.common.block;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.block.Block;
@@ -33,7 +34,7 @@ public class BlockBase extends Block {
     }
 	
 	public List<IRecipe> getRecipes(){
-		return null;
+		return new ArrayList<IRecipe>();
 	}
 
 	@Override

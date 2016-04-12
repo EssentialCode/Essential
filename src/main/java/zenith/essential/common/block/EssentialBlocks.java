@@ -41,9 +41,7 @@ public final class EssentialBlocks {
 	public static void registerRecipes(List<IRecipe> recipes){
 		for(BlockBase block : blockList){
 			List<IRecipe> newRecipes = block.getRecipes();
-			if(newRecipes != null && newRecipes.size() > 0){
-				recipes.addAll(newRecipes);
-			}
+			recipes.addAll(newRecipes);
 		}
 	}
 }
