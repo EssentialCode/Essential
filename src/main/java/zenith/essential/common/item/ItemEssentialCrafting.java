@@ -67,7 +67,6 @@ public class ItemEssentialCrafting extends ItemBase {
 	@Override
 	@SideOnly(Side.CLIENT)
     public void initModel() {
-		log.info("Registry name: " + getRegistryName());
         ModelLoader.setCustomModelResourceLocation(this, 0, new ModelResourceLocation(getRegistryName()+"FiberGrass"));
         ModelLoader.setCustomModelResourceLocation(this, 1, new ModelResourceLocation(getRegistryName()+"SacredLeaf"));
     }

@@ -1,6 +1,7 @@
 package zenith.essential.client.proxy;
 
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import zenith.essential.common.block.EssentialBlocks;
 import zenith.essential.common.item.EssentialItems;
 import zenith.essential.common.proxy.CommonProxy;
 
@@ -10,6 +11,7 @@ public class ClientProxy extends CommonProxy {
 	public void preInit(FMLPreInitializationEvent event){
 		super.preInit(event);
 		EssentialItems.initModels();
+		EssentialBlocks.initModels();
 	}
 
 }

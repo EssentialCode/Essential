@@ -15,21 +15,16 @@ import zenith.essential.common.lib.GeneralConstants;
 public class ItemBase extends Item {
 	
 	public ItemBase(String name){
-		setUnlocalizedName(name);
+		setupAndRegister(name);
 		setCreativeTab(EssentialCreativeTab.INSTANCE);
 	}
 	
-	public static ItemBase instantiate(){
-		return new ItemBase("genericItem");
-	}
-
 	@SideOnly(Side.CLIENT)
     public void initModel() {
 //        ModelLoader.setCustomModelResourceLocation(this, 0, new ModelResourceLocation(getRegistryName(), "inventory"));
     }
 	
-	@Override
-	public Item setUnlocalizedName(String name){
+	private Item setupAndRegister(String name){
 		super.setUnlocalizedName(name);
 		setRegistryName(name);
 		GameRegistry.registerItem(this, name);
@@ -38,7 +33,7 @@ public class ItemBase extends Item {
 
 	@Override
 	public String getUnlocalizedName(){
-		return super.getUnlocalizedName() + "." + GeneralConstants.MOD_ID;
+		return super.getUnlocalizedName();
 	}
 
 	public List<IRecipe> getRecipes(){
