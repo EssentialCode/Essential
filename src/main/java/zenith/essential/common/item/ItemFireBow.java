@@ -3,6 +3,7 @@ package zenith.essential.common.item;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -19,6 +20,8 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 import zenith.essential.common.EssentialLogger;
+import zenith.essential.common.block.BlockCampfire;
+import zenith.essential.common.block.EssentialBlocks;
 import zenith.essential.common.lib.ColorHelper;
 
 public class ItemFireBow extends ItemBase {
@@ -42,24 +45,6 @@ public class ItemFireBow extends ItemBase {
 	@SideOnly(Side.CLIENT)
     public void initModel() {
 		ModelLoader.setCustomModelResourceLocation(this, 0, new ModelResourceLocation(getRegistryName()));
-
-//        ModelLoader.setCustomMeshDefinition(this, new ItemMeshDefinition() {
-//            @Override
-//            public ModelResourceLocation getModelLocation(ItemStack stack) {
-//                NBTTagCompound cmp = stack.getTagCompound();
-//                short heat = 0;
-//                if (cmp != null) {
-//                    heat = cmp.getShort(HEAT_KEY);
-//                }
-//                int level = (9*heat) / MAX_HEAT;
-//                if (level < 0) {
-//                    level = 0;
-//                } else if (level > 8) {
-//                    level = 8;
-//                }
-//                return new ModelResourceLocation(getRegistryName() + (8-level));
-//            }
-//        });
     }
 
 	@SideOnly(Side.CLIENT)
@@ -123,15 +108,21 @@ public class ItemFireBow extends ItemBase {
         }
     }
 
-	private void startFire(ItemStack stack, NBTTagCompound cmp, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumFacing side) {
-		pos = pos.offset(side);
-		if (worldIn.isAirBlock(pos))
-		{
-			worldIn.playSoundEffect((double)pos.getX() + 0.5D, (double)pos.getY() + 0.5D, (double)pos.getZ() + 0.5D, "fire.ignite", 1.0F, itemRand.nextFloat() * 0.4F + 0.8F);
-			worldIn.setBlockState(pos, Blocks.fire.getDefaultState());
+	private void startFire(ItemStack stack, NBTTagCompound cmp, EntityPlayer player, World world, BlockPos pos, EnumFacing side) {
+		IBlockState state = world.getBlockState(pos);
+		if(state.getBlock() == EssentialBlocks.campfire){
+			world.playSoundEffect((double)pos.getX() + 0.5D, (double)pos.getY() + 0.5D, (double)pos.getZ() + 0.5D, "fire.ignite", 1.0F, itemRand.nextFloat() * 0.4F + 0.8F);
+			world.setBlockState(pos, state.withProperty(BlockCampfire.STATE, BlockCampfire.CampfireState.BURNING), 2);
+		} else {
+			pos = pos.offset(side);
+			if (world.isAirBlock(pos))
+			{
+				world.playSoundEffect((double)pos.getX() + 0.5D, (double)pos.getY() + 0.5D, (double)pos.getZ() + 0.5D, "fire.ignite", 1.0F, itemRand.nextFloat() * 0.4F + 0.8F);
+				world.setBlockState(pos, Blocks.fire.getDefaultState());
+			}
 		}
 
-		stack.damageItem(1, playerIn);
+		stack.damageItem(1, player);
 		cmp.setShort(HEAT_KEY, (short) 0);
 	}
 	

@@ -5,7 +5,14 @@
     "transform": "forge:default-block"
   },
   "variants": {
-    "normal": [{}],
-    "inventory": [{}]
+    "state=new": [{
+		"model": "essential:campfire"
+    }],
+    "state=burning": [{
+		"model": "essential:campfire_burning"
+    }],
+    "state=done": [{
+    	"model": "essential:campfire_burnt"
+    }]
   }
 }
