@@ -15,14 +15,26 @@ public class EssentialLogger {
 		return instance;
 	}
 	
+	public static void quickDebug(String msg){
+		instance.debug(msg);
+	}
+	
 	public void debug(String msg){
 		logger.log(Level.DEBUG, msg);
+	}
+
+	public static void quickError(String msg){
+		instance.error(msg);
 	}
 	
 	public void error(String msg){
 		logger.log(Level.ERROR, msg);
 	}
 	
+	public static void quickInfo(String msg){
+		instance.info(msg);
+	}
+
 	public void info(String msg){
 		logger.log(Level.INFO, msg);
 	}

@@ -12,6 +12,7 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import zenith.essential.common.EssentialCreativeTab;
+import zenith.essential.common.item.EssentialItemBlock;
 
 public class BlockBase extends Block {
 
@@ -25,7 +26,7 @@ public class BlockBase extends Block {
 	private Block setupAndRegister(String name){
 		setUnlocalizedName(name);
 		setRegistryName(name);
-		GameRegistry.registerBlock(this, ItemBlock.class, name);
+		GameRegistry.registerBlock(this, EssentialItemBlock.class, name);
 		return this;
 	}
 	
@@ -46,5 +47,9 @@ public class BlockBase extends Block {
 	public boolean isOpaqueCube() {
 		// TODO Auto-generated method stub
 		return false;
+	}
+	
+	public String getUnlocalizedIdentifier(int meta){
+		return null;
 	}
 }

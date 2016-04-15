@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import net.minecraft.block.Block;
+import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyEnum;
@@ -14,9 +16,9 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
@@ -31,10 +33,13 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import zenith.essential.common.EssentialLogger;
 import zenith.essential.common.item.EssentialItems;
+import zenith.essential.common.lib.EssentialInventoryHelper;
+import zenith.essential.common.tile.TileEntityCampfire;
 
-public class BlockCampfire extends BlockBase {
+public class BlockCampfire extends BlockBase implements ITileEntityProvider{
 	public static final String name = "campfire";
     public static final PropertyEnum<CampfireState> STATE = PropertyEnum.<CampfireState>create("state", CampfireState.class);
+    private static boolean keepInventory = false;
 
 	public BlockCampfire() {
 		super(name, Material.wood);
@@ -50,6 +55,11 @@ public class BlockCampfire extends BlockBase {
         worldIn.setBlockState(pos, state.withProperty(STATE, CampfireState.NEW), 2);
     }
 
+	@Override
+    public TileEntity createNewTileEntity(World worldIn, int meta) {
+        return new TileEntityCampfire();
+    }
+
 	private void setBlockBounds() {
 		float pixel = 1F / 16;
 		float minX = 0.2F * pixel;
@@ -59,6 +69,16 @@ public class BlockCampfire extends BlockBase {
 		float maxY = 7 * pixel;
 		float maxZ = 1F - 0.2F * pixel;
 		setBlockBounds(minX, minY, minZ, maxX, maxY, maxZ);
+	}
+	
+	
+	// by returning a null collision bounding box we stop the player from colliding with it
+    @Override
+	public AxisAlignedBB getCollisionBoundingBox(World world, BlockPos pos, IBlockState state) {
+    	if(state.getValue(STATE) == CampfireState.DONE){
+			return null;
+    	}
+    	return super.getCollisionBoundingBox(world, pos, state);
 	}
 	
 	@Override
@@ -76,18 +96,106 @@ public class BlockCampfire extends BlockBase {
 			World world, BlockPos pos, IBlockState state, EntityPlayer player, 
 			EnumFacing side, float hitX, float hitY, float hitZ) {
 
+		if(state.getValue(STATE) != CampfireState.NEW) {
+			return true;
+		}
+
 		ItemStack stack = player.getHeldItem();
 		if(stack == null){
+			if(player.isSneaking()){
+				EssentialLogger.getLogger().info("remove item?");
+			}
 			return false;
 		}
 		Item item = stack.getItem();
 		if(item == EssentialItems.firebow){
 			return false;
-		} else if (item == Items.flint_and_steel){
-			world.setBlockState(pos, state.withProperty(STATE, CampfireState.BURNING), 2);
 		}
+		if (item == Items.flint_and_steel){
+			Random rand = new Random();
+			setBurningState(CampfireState.BURNING, world, pos);
+			world.playSound((double)((float)pos.getX() + 0.5F), 
+					(double)((float)pos.getY() + 0.5F), 
+					(double)((float)pos.getZ() + 0.5F), 
+					"fire.ignite", 
+					0.8F + rand.nextFloat(), 
+					rand.nextFloat() * 0.7F + 0.3F, false);
+			return true;
+		}
+		TileEntity tile = world.getTileEntity(pos);
+		if(tile instanceof TileEntityCampfire){
+			TileEntityCampfire te = (TileEntityCampfire) world.getTileEntity(pos);
+			if(te.insertItemFromPlayer(player)){
+				return true;
+			}
+		}
+
 		return true;
 	}
+
+	@Override
+    public void breakBlock(World world, BlockPos pos, IBlockState state)
+    {
+        if (!keepInventory)
+        {
+            TileEntity tileentity = world.getTileEntity(pos);
+            if (tileentity instanceof TileEntityCampfire)
+            {
+            	TileEntityCampfire te = (TileEntityCampfire) tileentity;
+            	CampfireState cState = state.getValue(STATE);
+            	EssentialInventoryHelper.dropItems(te.getContentsBroken(cState), world, pos);
+            }
+        }
+
+        super.breakBlock(world, pos, state);
+        
+    }
+	
+	@Override
+	public boolean canPlaceBlockAt(World world, BlockPos pos){
+		return !world.isAirBlock(pos.down()) && 
+				world.getBlockState(pos.down()).getBlock().isFullCube();
+	}
+
+	@Override
+	public void onNeighborBlockChange(World world, BlockPos pos, IBlockState state, Block neighborBlock) {
+		if(!world.isRemote){
+			if(world.isAirBlock(pos.down())){
+				world.setBlockToAir(pos);
+			}
+		}
+	}
+	
+	@Override
+    public Item getItemDropped(IBlockState state, Random rand, int fortune) {
+        return null;
+    }
+
+    public static void setBurningState(CampfireState target, World world, BlockPos pos) {
+    	if(!world.isRemote) {
+			IBlockState state = world.getBlockState(pos);
+			TileEntity tileentity = world.getTileEntity(pos);
+			keepInventory = true;
+
+			world.setBlockState(pos, state.withProperty(STATE, target), 2);
+			world.setBlockState(pos, state.withProperty(STATE, target), 2);
+
+			if(target == CampfireState.DONE){
+				world.playSoundEffect((double)pos.getX() + 0.5D, 
+						(double)pos.getY() + 0.5D, 
+						(double)pos.getZ() + 0.5D, 
+						"random.fizz", 0.3F, 
+						RANDOM.nextFloat() * 0.4F + 1.8F);
+			}
+
+			keepInventory = false;
+
+			if (tileentity != null) {
+				tileentity.validate();
+				world.setTileEntity(pos, tileentity);
+			}
+    	}
+    }
 
 	@Override
     public IBlockState getStateFromMeta(int meta) {
@@ -182,7 +290,6 @@ public class BlockCampfire extends BlockBase {
         		meta = 0;
         	}
         	CampfireState state = STATE_LOOKUP[meta];
-        	EssentialLogger.getLogger().info("STATE_LOOKUP: " + state.name + " (" + state.ordinal() + ")");
         	return state;
 
         }

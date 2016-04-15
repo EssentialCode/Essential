@@ -8,6 +8,7 @@ import zenith.essential.common.RecipeManager;
 import zenith.essential.common.block.EssentialBlocks;
 import zenith.essential.common.event.ForgeEventHandlers;
 import zenith.essential.common.item.EssentialItems;
+import zenith.essential.common.tile.EssentialTileEntities;
 
 public class CommonProxy {
 	
@@ -19,6 +20,7 @@ public class CommonProxy {
 	public void init(FMLInitializationEvent event){
 		
 		RecipeManager.registerCraftingRecipes();
+		EssentialTileEntities.init();
 		MinecraftForge.EVENT_BUS.register(new ForgeEventHandlers());
 	}
 

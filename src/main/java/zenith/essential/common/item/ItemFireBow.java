@@ -21,6 +21,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 import zenith.essential.common.EssentialLogger;
 import zenith.essential.common.block.BlockCampfire;
+import zenith.essential.common.block.BlockCampfire.CampfireState;
 import zenith.essential.common.block.EssentialBlocks;
 import zenith.essential.common.lib.ColorHelper;
 
@@ -29,7 +30,7 @@ public class ItemFireBow extends ItemBase {
 	private static EssentialLogger log = EssentialLogger.getLogger();
 
 	public static String name = "itemFireBow";
-	public static final int MAX_HEAT = 50;
+	public static final int MAX_HEAT = 25;
 	public static final short MAX_COOLING = 15;
 	public static final String HEAT_KEY = "heat";
 	public static final String COOLING_KEY = "cooling";
@@ -112,7 +113,7 @@ public class ItemFireBow extends ItemBase {
 		IBlockState state = world.getBlockState(pos);
 		if(state.getBlock() == EssentialBlocks.campfire){
 			world.playSoundEffect((double)pos.getX() + 0.5D, (double)pos.getY() + 0.5D, (double)pos.getZ() + 0.5D, "fire.ignite", 1.0F, itemRand.nextFloat() * 0.4F + 0.8F);
-			world.setBlockState(pos, state.withProperty(BlockCampfire.STATE, BlockCampfire.CampfireState.BURNING), 2);
+			BlockCampfire.setBurningState(CampfireState.BURNING, world, pos);
 		} else {
 			pos = pos.offset(side);
 			if (world.isAirBlock(pos))

@@ -11,11 +11,17 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public final class EssentialBlocks {
 
 	public static BlockCampfire campfire;
+	public static BlockAltar altar;
+	public static BlockTable table;
+	public static BlockTableShort tableShort;
 
 	private static List<BlockBase> blockList = new ArrayList<BlockBase>();
 
 	public static void init(){
 		campfire = (BlockCampfire) registerBlock(BlockCampfire.class);
+		altar = (BlockAltar) registerBlock(BlockAltar.class);
+		table = (BlockTable) registerBlock(BlockTable.class);
+		tableShort = (BlockTableShort) registerBlock(BlockTableShort.class);
 	}
 
 	private static Block registerBlock(Class<? extends BlockBase> clazz){
