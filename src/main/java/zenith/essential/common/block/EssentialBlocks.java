@@ -12,6 +12,7 @@ public final class EssentialBlocks {
 
 	public static BlockCampfire campfire;
 	public static BlockAltar altar;
+	public static BlockAltarAttuned altarAttuned;
 	public static BlockTable table;
 	public static BlockTableShort tableShort;
 
@@ -20,8 +21,10 @@ public final class EssentialBlocks {
 	public static void init(){
 		campfire = (BlockCampfire) registerBlock(BlockCampfire.class);
 		altar = (BlockAltar) registerBlock(BlockAltar.class);
+		altarAttuned = (BlockAltarAttuned) registerBlock(BlockAltarAttuned.class);
 		table = (BlockTable) registerBlock(BlockTable.class);
 		tableShort = (BlockTableShort) registerBlock(BlockTableShort.class);
+
 	}
 
 	private static Block registerBlock(Class<? extends BlockBase> clazz){

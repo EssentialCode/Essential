@@ -1,0 +1,47 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "model": "essential:altar_attuned",
+    "transform": "forge:default-block"
+  },
+  "variants": {
+  	"essencetype": {
+	  "wood": {
+        "textures": { 
+          "planks": "blocks/log_oak",
+          "runner": "blocks/wool_colored_green",
+          "particle": "blocks/log_oak"
+        }
+      },
+      "fire": {
+        "textures": { 
+          "planks": "blocks/nether_brick",
+          "runner": "blocks/wool_colored_red",
+          "particle": "blocks/planks_birch"
+        }
+      },
+      "earth": {
+        "textures": { 
+          "planks": "blocks/stone",
+          "runner": "blocks/wool_colored_brown",
+          "particle": "blocks/planks_big_oak"
+        }
+	  },
+	  "metal": {
+        "textures": { 
+          "planks": "blocks/iron_block",
+          "runner": "blocks/wool_colored_silver",
+          "particle": "blocks/planks_jungle"
+        }
+	  },
+	  "water": {
+        "textures": { 
+          "planks": "blocks/ice_packed",
+          "runner": "blocks/wool_colored_blue",
+          "particle": "blocks/planks_oak"
+        }
+	  }
+  	},
+  	"inventory": [{}]
+  }
+}
