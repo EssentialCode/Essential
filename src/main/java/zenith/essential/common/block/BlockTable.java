@@ -125,4 +125,12 @@ public class BlockTable extends BlockBase {
 		}
 		return null;
 	}
+
+	@Override
+	public Vec3 getRotationData(IBlockState state) {
+		if(state.getValue(ROTATE) != null && state.getValue(ROTATE)){
+			return new Vec3(0,90,0);
+		}
+		return null;
+	}
 }

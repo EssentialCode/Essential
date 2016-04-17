@@ -25,12 +25,15 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.EnumWorldBlockLayer;
 import net.minecraft.util.IStringSerializable;
+import net.minecraft.util.Vec3;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.ShapedOreRecipe;
+import zenith.essential.client.render.RenderCampfire;
 import zenith.essential.common.EssentialLogger;
 import zenith.essential.common.item.EssentialItems;
 import zenith.essential.common.lib.EssentialInventoryHelper;
@@ -105,6 +108,10 @@ public class BlockCampfire extends BlockBase implements ITileEntityProvider{
 			if(player.isSneaking()){
 				EssentialLogger.getLogger().info("remove item?");
 			}
+			TileEntity tile = world.getTileEntity(pos);
+			TileEntityCampfire cf = (TileEntityCampfire) tile;
+			EssentialLogger.quickInfo("Clicked empty handed");
+			cf.clickOpenHanded();
 			return false;
 		}
 		Item item = stack.getItem();
@@ -153,15 +160,15 @@ public class BlockCampfire extends BlockBase implements ITileEntityProvider{
 	
 	@Override
 	public boolean canPlaceBlockAt(World world, BlockPos pos){
-		return !world.isAirBlock(pos.down()) && 
-				world.getBlockState(pos.down()).getBlock().isFullCube();
+		return true; //!world.isAirBlock(pos.down()) && 
+				//world.getBlockState(pos.down()).getBlock().isFullCube();
 	}
 
 	@Override
 	public void onNeighborBlockChange(World world, BlockPos pos, IBlockState state, Block neighborBlock) {
 		if(!world.isRemote){
 			if(world.isAirBlock(pos.down())){
-				world.setBlockToAir(pos);
+				//world.setBlockToAir(pos);
 			}
 		}
 	}
@@ -250,6 +257,7 @@ public class BlockCampfire extends BlockBase implements ITileEntityProvider{
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void initModel() {
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityCampfire.class, new RenderCampfire());
 		ModelResourceLocation location = new ModelResourceLocation(getRegistryName()+"Item");
 		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(this), 0, location);
 	}
@@ -304,4 +312,17 @@ public class BlockCampfire extends BlockBase implements ITileEntityProvider{
 			}
 		}
     }
+	
+	@Override
+    @SideOnly(Side.CLIENT)
+    public boolean shouldSideBeRendered(IBlockAccess worldIn, BlockPos pos, EnumFacing side) {
+        return false;
+    }
+
+	@Override
+	public Vec3 getRotationData(IBlockState state) {
+		return new Vec3(0,0,0);
+	}
+	
+	
 }

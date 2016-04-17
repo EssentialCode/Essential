@@ -1,11 +1,54 @@
 {
   "forge_marker": 1,
   "defaults": {
-    "model": "essential:altar_wood",
+    "model": "essential:altar_blank",
     "transform": "forge:default-block"
   },
   "variants": {
-  	"normal": [{}],
+  	"rotate" : {
+  		"true": {
+  			"y": 90
+  		},
+  		"false": {}
+  	},
+  	"woodtype": {
+	  "acacia": {
+        "textures": { 
+          "planks": "blocks/planks_acacia",
+          "particle": "blocks/planks_acacia"
+        }
+      },
+      "birch": {
+        "textures": { 
+          "planks": "blocks/planks_birch",
+          "particle": "blocks/planks_birch"
+        }
+      },
+      "dark_oak": {
+        "textures": { 
+          "planks": "blocks/planks_big_oak",
+          "particle": "blocks/planks_big_oak"
+        }
+	  },
+	  "jungle": {
+        "textures": { 
+          "planks": "blocks/planks_jungle",
+          "particle": "blocks/planks_jungle"
+        }
+	  },
+	  "oak": {
+        "textures": { 
+          "planks": "blocks/planks_oak",
+          "particle": "blocks/planks_oak"
+        }
+	  },
+  	  "spruce": {
+        "textures": { 
+          "planks": "blocks/planks_spruce",
+          "particle": "blocks/planks_spruce"
+        }
+  	  }
+  	},
   	"inventory": [{}]
   }
 }

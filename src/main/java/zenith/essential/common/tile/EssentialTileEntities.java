@@ -6,6 +6,7 @@ import zenith.essential.common.lib.GeneralConstants;
 public class EssentialTileEntities {
 	public static void init() {
 		GameRegistry.registerTileEntity(TileEntityCampfire.class, GeneralConstants.MOD_ID + "_campfire");
+		GameRegistry.registerTileEntity(TileEntityAltar.class, GeneralConstants.MOD_ID + "_altar");
 	}
 
 }
