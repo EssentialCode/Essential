@@ -42,6 +42,11 @@ public abstract class BlockBase extends Block {
 	public List<IRecipe> getRecipes(){
 		return new ArrayList<IRecipe>();
 	}
+	
+	@Override
+	public boolean isBlockNormalCube() {
+		return false;
+	}
 
 	@Override
 	public boolean isFullBlock(){

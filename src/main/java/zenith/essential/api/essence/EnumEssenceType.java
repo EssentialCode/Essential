@@ -7,21 +7,23 @@ import zenith.essential.common.lib.GeneralConstants;
 
 public enum EnumEssenceType implements IStringSerializable{
 
-	WOOD("wood", MapColor.greenColor, "emblem_wood.png"),
-	FIRE("fire", MapColor.redColor, "emblem_fire.png"),
-	EARTH("earth", MapColor.dirtColor, "emblem_earth.png"),
-	METAL("metal", MapColor.silverColor, "emblem_metal.png"),
-	WATER("water", MapColor.waterColor, "emblem_water.png");
+	WOOD("wood", MapColor.greenColor, "emblem_wood.png", "textures/blocks/wool_colored_green.png"),
+	FIRE("fire", MapColor.redColor, "emblem_fire.png", "textures/blocks/wool_colored_red.png"),
+	EARTH("earth", MapColor.dirtColor, "emblem_earth.png", "textures/blocks/wool_colored_brown.png"),
+	METAL("metal", MapColor.silverColor, "emblem_metal.png", "textures/blocks/wool_colored_silver.png"),
+	WATER("water", MapColor.waterColor, "emblem_water.png", "textures/blocks/wool_colored_blue.png");
 	
 	private final MapColor color;
 	private final String name;
 	private final ResourceLocation emblem;
+	private final ResourceLocation runner;
 	private final static EnumEssenceType[] LOOKUP = new EnumEssenceType[values().length];
 	
-	EnumEssenceType(String name, MapColor color, String emblemTextureName){
+	EnumEssenceType(String name, MapColor color, String emblemTextureName, String runnerTexture){
 		this.name = name;
 		this.color = color;
-		this.emblem = new ResourceLocation(GeneralConstants.MOD_ID, "textures/blocks/" + emblemTextureName);
+		this.runner = new ResourceLocation(runnerTexture);
+		this.emblem = new ResourceLocation(GeneralConstants.MOD_ID, "textures/items/" + emblemTextureName);
 	}
 
 	public MapColor getColor(){
@@ -38,6 +40,10 @@ public enum EnumEssenceType implements IStringSerializable{
 	
 	public ResourceLocation getEmblem(){
 		return this.emblem;
+	}
+	
+	public ResourceLocation getRunnerTexture(){
+		return this.runner;
 	}
 
 	@Override

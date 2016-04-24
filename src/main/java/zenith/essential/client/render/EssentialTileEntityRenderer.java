@@ -61,7 +61,6 @@ public class EssentialTileEntityRenderer<T extends TileEntityBase> extends TileE
         if (distanceSq > (16*16)) {
             return;
         }
-
         bindTexture(TextureMap.locationBlocksTexture);
         IInventoryHandler selectedHandler = RenderUtils.getFacingInterfaceHandle(tileEntity, block);
         RenderUtils.renderInterfaceHandles(tileEntity, selectedHandler, textOffset);

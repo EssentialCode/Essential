@@ -8,14 +8,14 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
-import zenith.essential.common.EssentialLogger;
+import net.minecraftforge.items.ItemStackHandler;
+import zenith.essential.common.tile.TileEntityBase;
 
 public class EssentialInventoryHelper {
 	
 	private static final Random RANDOM = new Random();
 
 	public static void dropItems(List<ItemStack> items, World world, BlockPos pos) {
-		int count = 0;
 		for(ItemStack stack : items) {
 			if(stack != null){
 				spewItemStack(stack, world, pos);
@@ -56,5 +56,17 @@ public class EssentialInventoryHelper {
             entityitem.motionZ = RANDOM.nextGaussian() * (double) baseVelocity;
             world.spawnEntityInWorld(entityitem);
         }
+	}
+	
+	public static ItemStackHandler getItemStackHandler(int size, final TileEntityBase te){
+		ItemStackHandler newHandler = new ItemStackHandler(size) {
+			@Override
+			protected void onContentsChanged(int slot)
+			{
+				super.onContentsChanged(slot);
+				te.markForUpdate();
+			}
+		};
+        return newHandler;
 	}
 }

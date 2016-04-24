@@ -219,7 +219,7 @@ public class TileEntityCampfire extends TileEntityBase implements ITickable {
 		return new ArrayList<IInventoryHandler>();
 	}
 	
-	private static enum EnumSlotPos {
+	public static enum EnumSlotPos {
 		LEFT(new float[]{0.0f, 0.2f}, 
 			 new float[]{0.0f, 1.0f}),
 		RIGHT(new float[]{0.7f, 1.0f}, 

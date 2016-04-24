@@ -118,4 +118,9 @@ public class TileEntityBase extends TileEntity {
 	protected void addInterfaceHandle(IInventoryHandler handler){
 		handlers.add(handler);
 	}
+	
+	public void markForUpdate(){
+		this.markDirty();
+		worldObj.markBlockForUpdate(pos);
+	}
 }

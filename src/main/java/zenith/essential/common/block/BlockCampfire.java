@@ -168,7 +168,7 @@ public class BlockCampfire extends BlockBase implements ITileEntityProvider{
 	public void onNeighborBlockChange(World world, BlockPos pos, IBlockState state, Block neighborBlock) {
 		if(!world.isRemote){
 			if(world.isAirBlock(pos.down())){
-				//world.setBlockToAir(pos);
+				world.setBlockToAir(pos);
 			}
 		}
 	}

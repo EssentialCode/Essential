@@ -4,9 +4,11 @@ package zenith.essential.client.render;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.Tessellator;
 // TODO: fix this
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.entity.RenderItem;
+import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.resources.model.IBakedModel;
@@ -131,7 +133,6 @@ public final class RenderUtils {
             directionHit = block.worldToBlockSpace(te.getWorld(), te.getPos(), mouseOver.sideHit);
             for (IInventoryHandler handle : te.getInventoryHandlers()) {
                 if (handle.getSide() == directionHit && handle.getMinX() <= sx2 && sx2 <= handle.getMaxX() && handle.getMinY() <= sy2 && sy2 <= handle.getMaxY()) {
-                	EssentialLogger.quickInfo("found one");
                 	return handle;
                 } else {
 //                	EssentialLogger.quickInfo(String.format(
@@ -161,7 +162,7 @@ public final class RenderUtils {
             }
             renderItemStackInWorld(handle.getRenderOffset(), selected, handle.isCrafting(), ghosted, stackInSlot, handle.getScale(), handle.getRotationOffset());
         }
-        if (Minecraft.getMinecraft().thePlayer.isSneaking()) {
+        if (!Minecraft.getMinecraft().thePlayer.isSneaking()) {
             for (IInventoryHandler handle : te.getInventoryHandlers()) {
                 boolean selected = selectedHandle == handle;
                 ItemStack ghosted = null;
@@ -221,20 +222,42 @@ public final class RenderUtils {
             GlStateManager.translate(-offset.xCoord, -offset.yCoord, -offset.zCoord);
         }
     }
+    
+    private void renderFloatingText(float x, float y, float z, float scale, float text){
+    	FontRenderer fontRenderer = Minecraft.getMinecraft().fontRendererObj;
+		GL11.glPushMatrix();
+		GL11.glTranslatef(x, y, z);
+		float playerViewY = Minecraft.getMinecraft().getRenderManager().playerViewY;
+		float playerViewX = Minecraft.getMinecraft().getRenderManager().playerViewX;
+		GL11.glRotatef(-playerViewY, 0.0F, 1.0F, 0.0F);
+		GL11.glRotatef(playerViewX, 1.0F, 0.0F, 0.0F);            
+		GL11.glRotatef(180F, 0.0F, 0.0F, 1.0F);
+		GL11.glScalef(0.05F*scale, 0.05F*scale, 1F);
+		fontRenderer.drawString(String.valueOf(text), -fontRenderer.getStringWidth(String.valueOf(text))/2, -fontRenderer.FONT_HEIGHT/2, 0xffff0000);
+		GL11.glPopMatrix();
+    }
 
     private static void renderTextOverlay(Vec3 offset, List<String> present, List<String> missing, ItemStack ghosted, ItemStack stack, float scale, Vec3 textOffset) {
+		FontRenderer fontrenderer = Minecraft.getMinecraft().fontRendererObj;
         if (ghosted != null) {
             stack = ghosted;
         }
         if (stack != null) {
             net.minecraft.client.renderer.RenderHelper.enableStandardItemLighting();
 
-            GlStateManager.pushMatrix();
-            GlStateManager.translate(offset.xCoord + -0.5 + textOffset.xCoord, offset.yCoord + 0.5 + textOffset.yCoord, offset.zCoord + 0.2 + textOffset.zCoord);
+            GL11.glPushMatrix();
+
+//            GL11.glNormal3f(0.0F, 1.0F, 0.0F);
+
+
+//            RenderManager
+//            GlStateManager.translate(offset.xCoord + textOffset.xCoord, offset.yCoord + 0.5 + textOffset.yCoord, offset.zCoord + 0.5 + textOffset.zCoord);
+            GL11.glTranslated(offset.xCoord + -0.5 + textOffset.xCoord, offset.yCoord + 0.5 + textOffset.yCoord, offset.zCoord + 0.2 + textOffset.zCoord);
+            rotateToPlayer();
+//    		GL11.glRotatef(180f, 0f, 0f, 1f);
             float f3 = 0.0075F;
             float factor = 1.5f;
             GlStateManager.scale(f3 * factor, -f3 * factor, f3);
-            FontRenderer fontrenderer = Minecraft.getMinecraft().fontRendererObj;
             GlStateManager.disableLighting();
             GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
             GlStateManager.disableDepth();
@@ -258,7 +281,7 @@ public final class RenderUtils {
             GlStateManager.enableDepth();
             GlStateManager.enableLighting();
 
-            GlStateManager.popMatrix();
+            GL11.glPopMatrix();
         }
     }
 
@@ -294,7 +317,9 @@ public final class RenderUtils {
     }
 
     public static void rotateToPlayer() {
-//        GL11.glRotatef(-RenderManager.instance.playerViewY, 0.0F, 1.0F, 0.0F);
-//        GL11.glRotatef(RenderManager.instance.playerViewX, 1.0F, 0.0F, 0.0F);
+            float playerViewY = Minecraft.getMinecraft().getRenderManager().playerViewY;
+            float playerViewX = Minecraft.getMinecraft().getRenderManager().playerViewX;
+            GL11.glRotatef(-playerViewY, 0.0F, 1.0F, 0.0F);
+    		GL11.glRotatef(playerViewX, 1.0F, 0.0F, 0.0F);            
     }
 }

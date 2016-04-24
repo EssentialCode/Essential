@@ -11,6 +11,7 @@ import net.minecraft.block.state.BlockState;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -37,11 +38,22 @@ public class BlockAltarAttuned extends BlockBase implements ITileEntityProvider{
 		this.setDefaultState(this.blockState.getBaseState()
         		.withProperty(ESSENCE_TYPE, EnumEssenceType.WOOD));
 	}
-
+	
 	@Override
     public TileEntity createNewTileEntity(World worldIn, int meta) {
-        return new TileEntityAltar();
+		IBlockState theState = getStateFromMeta(meta);
+        return new TileEntityAltar(theState.getValue(ESSENCE_TYPE));
     }
+
+	@Override
+	public int getLightValue(IBlockAccess world, BlockPos pos) {
+		TileEntity te = world.getTileEntity(pos);
+		if(te instanceof TileEntityAltar){
+			TileEntityAltar altar = (TileEntityAltar) te;
+			return Math.floorDiv(altar.getMeterOutput(), 2) + 10;
+		}
+		return 0;
+	};
 
 	@Override
 	@SideOnly(Side.CLIENT)
@@ -87,6 +99,13 @@ public class BlockAltarAttuned extends BlockBase implements ITileEntityProvider{
         return this.getDefaultState()
         		.withProperty(ESSENCE_TYPE, EnumEssenceType.byMetadata(meta));
     }
+    
+    @Override
+    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn,
+    		EnumFacing side, float hitX, float hitY, float hitZ) {
+    	// TODO Auto-generated method stub
+    	return ((TileEntityAltar) worldIn.getTileEntity(pos)).activatedByPlayer(playerIn);
+    }
 
 	@Override
     @SideOnly(Side.CLIENT)
@@ -99,5 +118,4 @@ public class BlockAltarAttuned extends BlockBase implements ITileEntityProvider{
 		// TODO Auto-generated method stub
 		return null;
 	}
-
 }
