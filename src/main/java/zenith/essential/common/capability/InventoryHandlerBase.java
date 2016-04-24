@@ -21,6 +21,7 @@ public class InventoryHandlerBase<T extends InventoryHandlerBase> implements IIn
 	private float maxY;
 	private Vec3 renderOffset;
 	private int rotationOffset;
+	private boolean showText = true;
 
 	private float scale = 1F;
 	protected IItemHandlerModifiable inventory;
@@ -169,6 +170,16 @@ public class InventoryHandlerBase<T extends InventoryHandlerBase> implements IIn
 
 	public IItemHandlerModifiable getInventory(){
 		return inventory;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public T setShowText(boolean showText){
+		this.showText = showText;
+		return (T) this;
+	}
+
+	public boolean showText(){
+		return this.showText;
 	}
 
 }

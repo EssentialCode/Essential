@@ -85,6 +85,11 @@ public final class RenderUtils {
         ibakedmodel = net.minecraftforge.client.ForgeHooksClient.handleCameraTransforms(ibakedmodel, ItemCameraTransforms.TransformType.NONE);
 
         renderItem.renderItem(is, ibakedmodel);
+        if(is.stackSize > 1){
+			GL11.glTranslatef(-0.07f, 0.07f, -0.03f);
+			renderItem.renderItem(is, ibakedmodel);
+			GL11.glTranslatef(0.07f, -0.07f, 0.03f);
+        }
         GlStateManager.cullFace(1029);
         GlStateManager.popMatrix();
         GlStateManager.disableRescaleNormal();
@@ -162,7 +167,7 @@ public final class RenderUtils {
             }
             renderItemStackInWorld(handle.getRenderOffset(), selected, handle.isCrafting(), ghosted, stackInSlot, handle.getScale(), handle.getRotationOffset());
         }
-        if (!Minecraft.getMinecraft().thePlayer.isSneaking()) {
+        if (Minecraft.getMinecraft().thePlayer.isSneaking()) {
             for (IInventoryHandler handle : te.getInventoryHandlers()) {
                 boolean selected = selectedHandle == handle;
                 ItemStack ghosted = null;
@@ -189,7 +194,18 @@ public final class RenderUtils {
 
                 List<String> present = new ArrayList<String>();
                 List<String> missing = new ArrayList<String>();
-                renderTextOverlay(handle.getRenderOffset(), present, missing, ghosted, stackInSlot, handle.getScale(), textOffset);
+//                renderTextOverlay(handle.getRenderOffset(), present, missing, ghosted, stackInSlot, handle.getScale(), textOffset);
+//                renderTextOverlay(handle.getRenderOffset(), present, missing, ghosted, stackInSlot, handle.getScale(), textOffset);
+                if(handle.showText() && stackInSlot != null){
+					renderFloatingText(
+						(float) handle.getRenderOffset().xCoord, 
+						(float) handle.getRenderOffset().yCoord,
+						(float) handle.getRenderOffset().zCoord,
+						handle.getScale(),
+						String.valueOf(stackInSlot.stackSize));
+                }
+                
+//    private void renderFloatingText(float x, float y, float z, float scale, float text){
             }
         }
     }
@@ -223,17 +239,18 @@ public final class RenderUtils {
         }
     }
     
-    private void renderFloatingText(float x, float y, float z, float scale, float text){
+    private static void renderFloatingText(float x, float y, float z, float scale, String text){
     	FontRenderer fontRenderer = Minecraft.getMinecraft().fontRendererObj;
 		GL11.glPushMatrix();
 		GL11.glTranslatef(x, y, z);
-		float playerViewY = Minecraft.getMinecraft().getRenderManager().playerViewY;
-		float playerViewX = Minecraft.getMinecraft().getRenderManager().playerViewX;
-		GL11.glRotatef(-playerViewY, 0.0F, 1.0F, 0.0F);
-		GL11.glRotatef(playerViewX, 1.0F, 0.0F, 0.0F);            
+            GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
+            GlStateManager.disableLighting();
+            GlStateManager.disableDepth();
+		rotateToPlayer();
 		GL11.glRotatef(180F, 0.0F, 0.0F, 1.0F);
-		GL11.glScalef(0.05F*scale, 0.05F*scale, 1F);
-		fontRenderer.drawString(String.valueOf(text), -fontRenderer.getStringWidth(String.valueOf(text))/2, -fontRenderer.FONT_HEIGHT/2, 0xffff0000);
+		GL11.glTranslatef(0f, 0.1f, 0f);
+		GL11.glScalef(0.01F*scale, 0.01F*scale, 1F);
+		fontRenderer.drawStringWithShadow(text, -fontRenderer.getStringWidth(text)/2, -fontRenderer.FONT_HEIGHT/2, 0xffffffff);
 		GL11.glPopMatrix();
     }
 
@@ -258,8 +275,8 @@ public final class RenderUtils {
             float f3 = 0.0075F;
             float factor = 1.5f;
             GlStateManager.scale(f3 * factor, -f3 * factor, f3);
-            GlStateManager.disableLighting();
             GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
+            GlStateManager.disableLighting();
             GlStateManager.disableDepth();
 
             if ((!missing.isEmpty()) || (!present.isEmpty())) {

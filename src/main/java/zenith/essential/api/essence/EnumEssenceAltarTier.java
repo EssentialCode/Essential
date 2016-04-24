@@ -22,7 +22,7 @@ public enum EnumEssenceAltarTier {
 	}
 	
 	public int getRegenRate(){
-		return Math.floorDiv(Math.floorDiv(capacity, HALF_PERCENT), 2);
+		return Math.floorDiv(Math.floorDiv(capacity, HALF_PERCENT), 20);
 	}
 	
 	public int getBaseCost(){

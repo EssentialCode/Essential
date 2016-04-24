@@ -37,4 +37,5 @@ public interface IInventoryHandler {
 
     // Extract output, if amount is -1 all will be extracted. Otherwise the specific amount.
     ItemStack extractOutput(TileEntityBase te, EntityPlayer player, int amount);
+	boolean showText();
 }

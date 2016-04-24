@@ -78,7 +78,8 @@ public class TileEntityAltar extends TileEntityBase implements ITickable, IEssen
 									0, new Vec3(0.3, 1, 0.3), 
 									new Vec3(0.7, 1.4, 0.7), 
 									new Vec3(0,1.1,0))
-									.setRotationOffset(rand.nextInt(360));
+									.setRotationOffset(rand.nextInt(360))
+									.setShowText(false);
 		addInterfaceHandle(workingInvHandler);
 		addInterfaceHandle(
 					new InputInventoryHandler(outputItemHandler, 
@@ -230,7 +231,7 @@ public class TileEntityAltar extends TileEntityBase implements ITickable, IEssen
 		}
 		
 		// go to work (maybe)
-		if(isWorking() && false){
+		if(isWorking()){
 			wasWorking = true;
 			float heightDest = 1.7f;
 			float starting = 1.1f;
