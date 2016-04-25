@@ -2,6 +2,7 @@ package zenith.essential.common.tile;
 
 import java.util.Random;
 
+import net.minecraft.block.material.MapColor;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -22,11 +23,14 @@ import zenith.essential.api.essence.EnumEssenceType;
 import zenith.essential.api.essence.IEssenceReceiver;
 import zenith.essential.api.essence.recipe.EssenceRecipeManager;
 import zenith.essential.api.essence.recipe.IEssenceRecipe;
+import zenith.essential.common.Essential;
 import zenith.essential.common.EssentialLogger;
 import zenith.essential.common.block.BlockAltarAttuned;
 import zenith.essential.common.capability.IInventoryHandler;
 import zenith.essential.common.capability.InputInventoryHandler;
+import zenith.essential.common.lib.ColorHelper;
 import zenith.essential.common.lib.EssentialInventoryHelper;
+import zenith.essential.common.proxy.CommonProxy;
 
 public class TileEntityAltar extends TileEntityBase implements ITickable, IEssenceReceiver{
 	
@@ -34,6 +38,7 @@ public class TileEntityAltar extends TileEntityBase implements ITickable, IEssen
 	private int workRemaining;
 	private EnumEssenceType essenceType;
 	private int altarTier;
+	private Random rand;
 
 	private int lastMeterOutput = 0;
 
@@ -51,6 +56,7 @@ public class TileEntityAltar extends TileEntityBase implements ITickable, IEssen
 		essence = EnumEssenceAltarTier.TIER_0.getBaseCost();
 		workRemaining = 0;
 		
+		rand = new Random();
 		setupInventoryHandlers();
 	}
 	
@@ -66,7 +72,6 @@ public class TileEntityAltar extends TileEntityBase implements ITickable, IEssen
 	}
 	
 	private void setupInventoryHandlers(){
-		Random rand = new Random();
 		addInterfaceHandle(
 					new InputInventoryHandler(inputItemHandler, 
 							0, new Vec3(0.3, 1, 0.3), 
@@ -244,6 +249,10 @@ public class TileEntityAltar extends TileEntityBase implements ITickable, IEssen
 			essence = Math.max(essence - essenceToUse, 0);
 			
 			if(workRemaining <= 0){
+				if(worldObj.isRemote){
+					// TODO: make this happen with packets
+					poofParticles();
+				}
 				ItemStack outputStack = getOutputStack();
 				if(!stackIsMeaningful(outputStack) || 
 						outputStack.stackSize + currentRecipeYield() < outputStack.getMaxStackSize()){
@@ -371,6 +380,24 @@ public class TileEntityAltar extends TileEntityBase implements ITickable, IEssen
 			return true;
 		}
 		return false;
+	}
+	
+	private void poofParticles(){
+		EnumEssenceType essType = worldObj.getBlockState(pos).getValue(BlockAltarAttuned.ESSENCE_TYPE);
+		MapColor color = essType.getColor();
+		float r = (float) ColorHelper.getRed(color.colorValue) / 255f;
+		float g = (float) ColorHelper.getGreen(color.colorValue) /255f;
+		float b = (float) ColorHelper.getBlue(color.colorValue) / 255f;
+		for (int j1 = 0; j1 < 15; ++j1) {
+			double xPos = (double)pos.getX() + rand.nextDouble() / 3 + 0.33f;
+			double yPos = (double)(pos.getY() + 1.8) - rand.nextDouble() * 0.2000000149011612D;
+			double zPos = (double)pos.getZ() + rand.nextDouble() / 3 + 0.33f;
+			float grav = 0 - (float) Math.random() * 0.01F;
+
+			CommonProxy proxy = Essential.proxy;
+
+			proxy.essenceFX(worldObj, xPos, yPos, zPos, r, g, b, grav, 0.55F, 15);
+		}
 	}
 	
 	public EnumEssenceType getEssenceType(){

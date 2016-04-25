@@ -41,7 +41,6 @@ public class TileEntityBase extends TileEntity {
 
     @Override
     public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity packet) {
-    	EssentialLogger.quickInfo("Got a packet!");
         this.readFromNBT(packet.getNbtCompound());
     }
 

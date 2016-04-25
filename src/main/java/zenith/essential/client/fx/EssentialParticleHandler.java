@@ -20,6 +20,8 @@ public final class EssentialParticleHandler {
 
 	@SubscribeEvent
 	public void onRenderWorldLast(RenderWorldLastEvent event) {
+		Tessellator tessellator = Tessellator.getInstance();
+
 		Profiler profiler = Minecraft.getMinecraft().mcProfiler;
 
 		GL11.glPushAttrib(GL11.GL_LIGHTING);
@@ -31,7 +33,7 @@ public final class EssentialParticleHandler {
 
 		profiler.startSection("essential-essence");
 		profiler.startSection("essence");
-		FXEssence.dispatchQueuedRenders();
+		FXEssence.dispatchQueuedRenders(tessellator);
 //		profiler.endStartSection("wisp");
 //		FXWisp.dispatchQueuedRenders(tessellator);
 		profiler.endSection();

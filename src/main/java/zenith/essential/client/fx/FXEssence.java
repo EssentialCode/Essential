@@ -23,7 +23,7 @@ import zenith.essential.common.lib.GeneralConstants;
 
 public class FXEssence extends EntityFX {
 
-	public static final ResourceLocation particles = new ResourceLocation(GeneralConstants.MOD_ID, "textures/misc/essence.png");
+	public static final ResourceLocation particles = new ResourceLocation(GeneralConstants.MOD_ID + ":textures/misc/essence.png");
 
 	public static Queue<FXEssence> queuedRenders = new ArrayDeque<FXEssence>();
 
@@ -59,61 +59,40 @@ public class FXEssence extends EntityFX {
 		motionZ = z;
 	}
 
-	public static void dispatchQueuedRenders() {
+	public static void dispatchQueuedRenders(Tessellator tessellator) {
 		EssentialParticleHandler.essenceFxCount = 0;
 
-		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+		GlStateManager.color(1.0F, 1.0F, 1.0F, 0.75F);
+		Minecraft.getMinecraft().renderEngine.bindTexture(particles);
 
-		for(FXEssence essenceFx : queuedRenders){
-			essenceFx.renderQueued();
-		}
+		WorldRenderer renderer = tessellator.getWorldRenderer();
+		renderer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR);
+		for(FXEssence essenceFx : queuedRenders)
+			essenceFx.renderQueued(renderer);
+		tessellator.draw();
 		queuedRenders.clear();
 	}
 
-	private void renderQueued() {
-		Tessellator tessellator = Tessellator.getInstance();
-		WorldRenderer renderer = tessellator.getWorldRenderer();
-		Minecraft.getMinecraft().renderEngine.bindTexture(particles);
-		EssentialLogger.quickInfo(particles.getResourcePath());
-//		renderer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR);
-		renderer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-
+	private void renderQueued(WorldRenderer renderer) {
 		EssentialParticleHandler.essenceFxCount++;
 
 		int part = particle + particleAge/multiplier;
 
 		float uStart = part % 8 / 8.0F;
 		float uEnd = uStart + 0.0624375F*2;
-		float vStart = 2 * 1f / 4f;
-		float vEnd = vStart + 1f/8f;
-		
-//		EssentialLogger.quickInfo("uStart: " + uStart + " uEnd: " + uEnd + " vStart: " + vStart + " vEnd: " + vEnd);
-		
-		float scale = 1F * particleScale;
+		float vStart = part / 8 / 8.0F;
+		float vEnd = vStart + 0.0624375F*2;
+		float scale = 0.4F * particleScale;
 		if (shrink) scale *= (particleMaxAge-particleAge+1)/(float)particleMaxAge;
 		float offsetX = (float)(prevPosX + (posX - prevPosX) * f - interpPosX);
 		float offsetY = (float)(prevPosY + (posY - prevPosY) * f - interpPosY);
 		float offsetZ = (float)(prevPosZ + (posZ - prevPosZ) * f - interpPosZ);
 		float float1 = 1.0F;
-		
-		renderer.pos(offsetX - f1 * scale - f4 * scale, offsetY - f2 * scale, offsetZ - f3 * scale - f5 * scale)
-			.tex(uEnd, vEnd)
-//			.color(particleRed * float1, particleGreen * float1, particleBlue * float1, 1)
-			.endVertex();
-		renderer.pos(offsetX - f1 * scale + f4 * scale, offsetY + f2 * scale, offsetZ - f3 * scale + f5 * scale)
-			.tex(uEnd, vStart)
-//			.color(particleRed * float1, particleGreen * float1, particleBlue * float1, 1)
-			.endVertex();
-		renderer.pos(offsetX + f1 * scale + f4 * scale, offsetY + f2 * scale, offsetZ + f3 * scale + f5 * scale)
-			.tex(uStart, vStart)
-//			.color(particleRed * float1, particleGreen * float1, particleBlue * float1, 1)
-			.endVertex();
-		renderer.pos(offsetX + f1 * scale - f4 * scale, offsetY - f2 * scale, offsetZ + f3 * scale - f5 * scale)
-			.tex(uStart, vEnd)
-//			.color(particleRed * float1, particleGreen * float1, particleBlue * float1, 1)
-			.endVertex();
 
-		tessellator.draw();
+		renderer.pos(offsetX - f1 * scale - f4 * scale, offsetY - f2 * scale, offsetZ - f3 * scale - f5 * scale).tex(uEnd, vEnd).color(particleRed * float1, particleGreen * float1, particleBlue * float1, 1).endVertex();
+		renderer.pos(offsetX - f1 * scale + f4 * scale, offsetY + f2 * scale, offsetZ - f3 * scale + f5 * scale).tex(uEnd, vStart).color(particleRed * float1, particleGreen * float1, particleBlue * float1, 1).endVertex();
+		renderer.pos(offsetX + f1 * scale + f4 * scale, offsetY + f2 * scale, offsetZ + f3 * scale + f5 * scale).tex(uStart, vStart).color(particleRed * float1, particleGreen * float1, particleBlue * float1, 1).endVertex();
+		renderer.pos(offsetX + f1 * scale - f4 * scale, offsetY - f2 * scale, offsetZ + f3 * scale - f5 * scale).tex(uStart, vEnd).color(particleRed * float1, particleGreen * float1, particleBlue * float1, 1).endVertex();
 	}
 
 	@Override
@@ -135,7 +114,6 @@ public class FXEssence extends EntityFX {
 		prevPosZ = posZ;
 
 		if (particleAge++ >= particleMaxAge){
-//			EssentialLogger.quickInfo("im ded");
 			setDead();
 		}
 

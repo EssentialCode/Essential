@@ -68,29 +68,33 @@ public class BlockAltarAttuned extends BlockBase implements ITileEntityProvider{
 	public void randomDisplayTick(World world, BlockPos pos, IBlockState state, Random rand) {
     	TileEntity te = world.getTileEntity(pos);
     	if(te instanceof TileEntityAltar){
-			if (rand.nextInt(24) == 0) {
-				world.playSound((double)((float)pos.getX() + 0.5F), (double)((float)pos.getY() + 0.5F), (double)((float)pos.getZ() + 0.5F), "fire.fire", 1.0F + rand.nextFloat(), rand.nextFloat() * 0.7F + 0.3F, false);
-			}
+    		TileEntityAltar altar = (TileEntityAltar) te;
+//			if (rand.nextInt(24) == 0) {
+//				world.playSound((double)((float)pos.getX() + 0.5F), (double)((float)pos.getY() + 0.5F), (double)((float)pos.getZ() + 0.5F), "fire.fire", 1.0F + rand.nextFloat(), rand.nextFloat() * 0.7F + 0.3F, false);
+//			}
 
-			if(rand.nextInt(3) == 0) {
-				for (int j1 = 0; j1 < 2; ++j1) {
-					double d7 = (double)pos.getX() + rand.nextDouble();
-					double d12 = (double)(pos.getY() + 1) - rand.nextDouble() * 0.10000000149011612D;
-					double d17 = (double)pos.getZ() + rand.nextDouble();
-					float grav = -0.15F - (float) Math.random() * 0.03F;
+			if(altar.isWorking() && rand.nextInt(5) == 0) {
+				MapColor color = state.getValue(ESSENCE_TYPE).getColor();
+				float r = (float) ColorHelper.getRed(color.colorValue) / 255f;
+				float g = (float) ColorHelper.getGreen(color.colorValue) /255f;
+				float b = (float) ColorHelper.getBlue(color.colorValue) / 255f;
 
-					MapColor color = state.getValue(ESSENCE_TYPE).getColor();
-					float r = (float) ColorHelper.getRed(color.colorValue);
-					float g = (float) ColorHelper.getGreen(color.colorValue);
-					float b = (float) ColorHelper.getBlue(color.colorValue);
+				{
+					double xPos = (double)pos.getX() + rand.nextDouble() / 2 + 0.25f;
+					double yPos = (double)(pos.getY() + 1) - rand.nextDouble() * 0.10000000149011612D;
+					double zPos = (double)pos.getZ() + rand.nextDouble() / 2 + 0.25f;
+					float grav = -0.05F - (float) Math.random() * 0.03F;
+
 					
 					CommonProxy proxy = Essential.proxy;
-
-					proxy.essenceFX(world, pos.getX(), pos.getY(), pos.getZ(), r, g, b, grav, 0.25F, 15);
-//					EssentialLogger.quickInfo("Making a particle!");
+					proxy.essenceFX(world, xPos, yPos, zPos, r, g, b, grav, 0.25F, 15);
+					
 				}
+
+
+//					EssentialLogger.quickInfo("Making a particle!");
 			}
-    	}
+		}
 	}
 
 	/*
