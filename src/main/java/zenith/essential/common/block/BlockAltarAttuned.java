@@ -1,9 +1,12 @@
 package zenith.essential.common.block;
 
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import net.minecraft.block.ITileEntityProvider;
+import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyEnum;
@@ -26,6 +29,10 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import zenith.essential.api.essence.EnumEssenceType;
 import zenith.essential.client.render.RenderAltarAttuned;
+import zenith.essential.common.Essential;
+import zenith.essential.common.EssentialLogger;
+import zenith.essential.common.lib.ColorHelper;
+import zenith.essential.common.proxy.CommonProxy;
 import zenith.essential.common.tile.TileEntityAltar;
 
 public class BlockAltarAttuned extends BlockBase implements ITileEntityProvider{
@@ -54,6 +61,48 @@ public class BlockAltarAttuned extends BlockBase implements ITileEntityProvider{
 		}
 		return 0;
 	};
+	
+	
+    @Override
+	@SideOnly(Side.CLIENT)
+	public void randomDisplayTick(World world, BlockPos pos, IBlockState state, Random rand) {
+    	TileEntity te = world.getTileEntity(pos);
+    	if(te instanceof TileEntityAltar){
+			if (rand.nextInt(24) == 0) {
+				world.playSound((double)((float)pos.getX() + 0.5F), (double)((float)pos.getY() + 0.5F), (double)((float)pos.getZ() + 0.5F), "fire.fire", 1.0F + rand.nextFloat(), rand.nextFloat() * 0.7F + 0.3F, false);
+			}
+
+			if(rand.nextInt(3) == 0) {
+				for (int j1 = 0; j1 < 2; ++j1) {
+					double d7 = (double)pos.getX() + rand.nextDouble();
+					double d12 = (double)(pos.getY() + 1) - rand.nextDouble() * 0.10000000149011612D;
+					double d17 = (double)pos.getZ() + rand.nextDouble();
+					float grav = -0.15F - (float) Math.random() * 0.03F;
+
+					MapColor color = state.getValue(ESSENCE_TYPE).getColor();
+					float r = (float) ColorHelper.getRed(color.colorValue);
+					float g = (float) ColorHelper.getGreen(color.colorValue);
+					float b = (float) ColorHelper.getBlue(color.colorValue);
+					
+					CommonProxy proxy = Essential.proxy;
+
+					proxy.essenceFX(world, pos.getX(), pos.getY(), pos.getZ(), r, g, b, grav, 0.25F, 15);
+//					EssentialLogger.quickInfo("Making a particle!");
+				}
+			}
+    	}
+	}
+
+	/*
+	  for(int i = 0; i < particles; i++) {
+		double x = player.posX + (Math.random() - 0.5) * 2.1 * player.width;
+		double y = player.posY - player.getYOffset();
+		double z = player.posZ + (Math.random() - 0.5) * 2.1 * player.width;
+		float grav = -0.15F - (float) Math.random() * 0.03F;
+		Psi.proxy.sparkleFX(world, x, y, z, r, g, b, grav, 0.25F, 15);
+	  }
+	 * 
+	 */
 
 	@Override
 	@SideOnly(Side.CLIENT)

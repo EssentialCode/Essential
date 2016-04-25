@@ -1,5 +1,6 @@
 package zenith.essential.common.proxy;
 
+import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
@@ -32,4 +33,17 @@ public class CommonProxy {
 		// TODO Auto-generated method stub
 		
 	}
+
+	public void essenceFX(World world, double x, double y, double z, float r, float g, float b, float size, int m) {
+		essenceFX(world, x, y, z, r, g, b, 0, 0, 0, size, m);
+	}
+
+	public void essenceFX(World world, double x, double y, double z, float r, float g, float b, float gravity, float size, int m) {
+		essenceFX(world, x, y, z, r, g, b, 0, -gravity, 0, size, m);
+	}
+
+	public void essenceFX(World world, double x, double y, double z, float r, float g, float b, float motionx, float motiony, float motionz, float size, int m) {
+		// Proxy override
+	}
+
 }
